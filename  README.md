@@ -34,7 +34,9 @@
 
 浏览器访问 `主机IP:8989/docs`
 
-### Linux直接运行 (Ubuntu)
+### Linux运行 (Ubuntu)
+
+如果已经是root用户,无需执行任何切换用户操作
 
 切换root用户
 
@@ -83,4 +85,26 @@
 ###### 运行run.py
 
 `python3.10 run.py`
+
+浏览器访问 `主机IP:8000/docs`
+
+### Windows运行 (Ubuntu)
+
+###### 安装python(3.10.8)
+
+https://www.python.org/ftp/python/3.10.8/python-3.10.8-amd64.exe
+
+###### 拉取代码 或 直接解压源代码压缩包
+
+###### 在终端进入 boost_automation 文件夹
+
+###### 安装所需python包
+
+`pip install -r requirements.txt`
+
+###### 运行run.py
+
+`python run.py`
+
+浏览器访问 `主机IP:8000/docs`
 
