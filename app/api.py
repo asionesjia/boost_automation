@@ -8,7 +8,7 @@ from starlette import status
 from starlette.background import BackgroundTask
 from starlette.responses import FileResponse
 
-from app.main import identity_verification, req_identity_verification
+from app.main import identity_verification
 from app.schemas import IdentityVerification
 
 application = APIRouter()
@@ -37,25 +37,20 @@ async def create_upload_file(file: UploadFile):
                 mn = True
             else:
                 mn = False
-            date = item[7].split("/")
-            req_data.append(identity_verification(IdentityVerification(
-                idType=item[1],
-                stateOfIssue=item[2],
-                licenseNumber=item[3],
-                firstName=item[4],
-                middleName=item[5],
-                familyName=item[6],
+            date = str(item[7]).strip().split("/")
+            res_status = identity_verification(IdentityVerification(
+                idType=str(item[1]).strip(),
+                stateOfIssue=str(item[2]).strip(),
+                licenseNumber=str(item[3]).strip(),
+                firstName=str(item[4]).strip(),
+                middleName=str(item[5]).strip(),
+                familyName=str(item[6]).strip(),
                 noMiddleName=mn,
-                dobDay=date[0],
-                dobMonth=date[1],
-                dobYear=date[2]
-            )))
-        res_status = req_identity_verification(req_data)
-        for item in data:
-            if not data.index(item):
-                ws['I1'].value = "IdentityVerification"
-                continue
-            ws[f'I{data.index(item) + 1}'].value = res_status[data.index(item) - 1]
+                dobDay=str(date[0]).strip(),
+                dobMonth=str(date[1]).strip(),
+                dobYear=str(date[2]).strip()
+            ))
+            ws[f'I{data.index(item) + 1}'].value = res_status
         filename = f'{uuid.uuid4()}.xlsx'
         wb.save(filename)
         wb.close()

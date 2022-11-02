@@ -1,6 +1,8 @@
 import json
 
-import grequests
+import requests
+from fastapi import HTTPException
+from starlette import status
 
 from app.schemas import IdentityVerification
 
@@ -23,11 +25,7 @@ def identity_verification(data: IdentityVerification = None):
     if not data.noMiddleName:
         req_data["data"]["noMiddleName"] = False
         req_data["data"]["middleName"] = data.middleName
-    return req_data
-
-
-def req_identity_verification(data: list):
-    req_list = [grequests.post(url="https://tapi.telstra.com/prepaid/activation/bff/customers/document", headers={
+    response = requests.post(url="https://tapi.telstra.com/prepaid/activation/bff/customers/document", headers={
         "Accept": "application/json, text/plain, */*",
         "Accept-Encoding": "gzip, deflate, br",
         "Accept-Language": "zh-CN,zh;q=0.9",
@@ -47,10 +45,12 @@ def req_identity_verification(data: list):
         "Sec-Fetch-Site": "cross-site",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36",
         "x-request-application": "BPPA"
-    }, data=json.dumps(i)) for i in data]
-    res_list = grequests.map(req_list)
+    }, data=json.dumps(req_data))
     try:
-        res_status = [json.loads(i.content)["status"] for i in res_list]
-    except Exception as reqs:
-        print(res_list)
-    return res_status
+        res_status = json.loads(response.content)["status"]
+        if res_status == "SUCCESS" or res_status == "ERROR":
+            return res_status
+        return json.loads(response.content)
+    except HTTPException(status_code=status.HTTP_405_METHOD_NOT_ALLOWED):
+        print(response.content)
+
