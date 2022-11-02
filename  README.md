@@ -108,3 +108,9 @@ https://www.python.org/ftp/python/3.10.8/python-3.10.8-amd64.exe
 
 浏览器访问 `主机IP:8000/docs`
 
+### 构建Docker镜像
+
+Windows安装docker后,进入项目目录，执行
+
+`docker build -t username/project_name:latest`
+
