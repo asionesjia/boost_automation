@@ -60,5 +60,4 @@ async def create_upload_file(file: UploadFile):
             background=BackgroundTask(lambda: os.remove(filename)),
         )
     else:
-        raise HTTPException(status_code=status.HTTP_405_METHOD_NOT_ALLOWED, detail="该文件类型不支持！")
-
+        raise HTTPException(status_code=status.HTTP_405_METHOD_NOT_ALLOWED, detail={"detail": "该文件类型不支持！"})
