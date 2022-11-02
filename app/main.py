@@ -51,6 +51,7 @@ def identity_verification(data: IdentityVerification = None):
         if res_status == "SUCCESS" or res_status == "ERROR":
             return res_status
         return json.loads(response.content)
-    except HTTPException(status_code=status.HTTP_405_METHOD_NOT_ALLOWED):
+    except HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="请求失败！"):
         print(response.content)
+        return "请求失败"
 
