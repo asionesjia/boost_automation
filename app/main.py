@@ -48,10 +48,13 @@ def identity_verification(data: IdentityVerification = None):
     }, data=json.dumps(req_data))
     try:
         res_status = json.loads(response.content)["status"]
-        if res_status == "SUCCESS" or res_status == "ERROR":
+        if res_status == "SUCCESS":
             return res_status
-        return json.loads(response.content)
-    except HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail={"detail": "请求失败！"}):
+        return f'{json.loads(response.content)["status"]}: {json.loads(response.content)["errors"][0]}'
+    except:
         print(response.content)
-        return "请求失败"
+        raise HTTPException(status_code=status.HTTP_405_METHOD_NOT_ALLOWED, detail={
+            "msg": "请求失败！",
+            "detail": json.loads(response.content)
+        })
 
